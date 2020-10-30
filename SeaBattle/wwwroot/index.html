@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Sea Battle | Главная</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="#" class="logo">Sea Battle</a>
+      <div class="auth_wrap">
+        <a href="#" class="button_light">Войти</a>
+        <a href="#" class="button_light">Зарегистрироваться</a>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <h1>Морской бой онлайн</h1>
+      <div class="game_container">
+        <div class="fields_wrapper">
+          <div class="own_field">
+            <h3>Поле Player1</h3>
+            <span class="bluetext">Случайным образом</span>
+            <div class="player1_field">
+              <div class="field_markup">
+                <div class="horizontal_markup">
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                </div>
+                <div class="vertical_markup">
+                  <span>A</span>
+                  <span>B</span>
+                  <span>C</span>
+                  <span>D</span>
+                  <span>E</span>
+                  <span>F</span>
+                  <span>G</span>
+                  <span>H</span>
+                  <span>I</span>
+                  <span>J</span>
+                </div>
+              </div>
+              <div id="ownfield"></div>
+            </div>
+            <div class="button_light find_enemy">Найти противника</div>
+          </div>
+          <div class="enemy_field">
+            <h3>Поле Player2</h3>
+            <div class="player2_field">
+              <div class="field_markup">
+                <div class="horizontal_markup">
+                  <span>1</span>
+                  <span>2</span>
+                  <span>3</span>
+                  <span>4</span>
+                  <span>5</span>
+                  <span>6</span>
+                  <span>7</span>
+                  <span>8</span>
+                  <span>9</span>
+                  <span>10</span>
+                </div>
+                <div class="vertical_markup">
+                  <span>A</span>
+                  <span>B</span>
+                  <span>C</span>
+                  <span>D</span>
+                  <span>E</span>
+                  <span>F</span>
+                  <span>G</span>
+                  <span>H</span>
+                  <span>I</span>
+                  <span>J</span>
+                </div>
+              </div>
+              <div id="enemyfield"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="js/extensions.js"></script>
+  <script src="js/FieldClasses/Field.js"></script>
+  <script src="js/fieldBehave.js"></script>
+  <script src="js/turnHandler.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
