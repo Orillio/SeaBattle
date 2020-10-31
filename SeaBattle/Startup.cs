@@ -13,6 +13,7 @@ using SeaBattle.Models.Contexts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SeaBattle.Models;
+using SeaBattle.Hubs;
 
 namespace SeaBattle
 {
@@ -51,6 +52,10 @@ namespace SeaBattle
                 routes.MapRoute(
                     name: null,
                     template: "{controller=Main}/{action=Index}");
+            });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<GameHub>("/hub");
             });
         }
     }

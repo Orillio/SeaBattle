@@ -1,12 +1,29 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/fonts.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <title>Sea Battle | @ViewBag.Title</title>
 </head>
 <body>
-    <div>
-        @RenderBody()
-    </div>
+    <header>
+        <div class="container">
+            <a href="#" class="logo">Sea Battle</a>
+            <div class="auth_wrap">
+                <a href="#" class="button_light">Войти</a>
+                <a href="#" class="button_light">Зарегистрироваться</a>
+            </div>
+        </div>
+    </header>
+    @RenderBody()
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+    <script src="~/js/extensions.js"></script>
+    <script src="~/js/FieldClasses/Field.js"></script>
+    <script src="~/js/fieldBehave.js"></script>
+    <script src="~/js/turnHandler.js"></script>
+    <script src="~/js/script.js"></script>
 </body>
 </html>
