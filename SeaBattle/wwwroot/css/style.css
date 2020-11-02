@@ -42,7 +42,7 @@ body {
   min-height: 4000px;
   color: #555;
   background-color: #fff;
-  font-family: 'Cuprum';
+  font-family: "Cuprum";
 }
 
 header {
@@ -81,6 +81,7 @@ header .container {
 }
 
 .button_light {
+  background-color: transparent;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -205,8 +206,6 @@ main h1 {
 }
 
 .field_markup {
-  cursor: pointer;
-  z-index: 111;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -273,6 +272,14 @@ main h1 {
   background-position: center center;
 }
 
+.clickable {
+  cursor: pointer;
+  width: 100%;
+  position: absolute;
+  z-index: 1111;
+  height: 100%;
+}
+
 .onedeck-rotated {
   height: 30px;
 }
@@ -303,4 +310,59 @@ main h1 {
 
 .fourdeck {
   width: 120px;
+}
+
+.form {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.input {
+  color: #555;
+  font-family: "Cuprum";
+  border-radius: 5px;
+  line-height: 10px;
+  border: 1px solid #a0a0a0;
+  padding: 10px 15px;
+  font-size: 16px;
+  -webkit-transition: all .4s ease;
+  transition: all .4s ease;
+}
+.input:hover, .input:focus {
+  background-color: #e6e6e6;
+}
+.input.each {
+  margin-top: 40px;
+}
+
+.button_light.mt {
+  color: #555;
+  margin-top: 40px;
+  font-family: "Cuprum";
+}
+.button_light.mt:hover {
+  background-color: #e6e6e6;
+}
+
+.dark_rect {
+  position: absolute;
+  width: 101%;
+  height: 101%;
+  color: #fff;
+  font-size: 25px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }

@@ -28,7 +28,22 @@ namespace SeaBattle.Controllers
         {
             return View(new LoginForm());
         }
-        [Authorize]
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(LoginForm form)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser(form.Username);
+                var result = await manager.CreateAsync(user, form.Password);
+                if (result.Succeeded)
+                {
+                    await signIn.PasswordSignInAsync(user, form.Password, false, false);
+                    return Redirect("/");
+                }
+                ModelState.AddModelError(null, "Ошибка в регистрации");
+            }
+            return View(form);
+        }
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginForm form)
         {
@@ -38,7 +53,7 @@ namespace SeaBattle.Controllers
             {
                 if((await signIn.PasswordSignInAsync(user, form.Password, false, false)).Succeeded)
                 {
-                    return Redirect(form.ReturnUrl);
+                    return Redirect(form?.ReturnUrl ?? "/");
                 }
             }
             ModelState.AddModelError(null, "Введены неправильные имя или пароль");

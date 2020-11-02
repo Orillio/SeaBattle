@@ -11,10 +11,18 @@
     <header>
         <div class="container">
             <a href="#" class="logo">Sea Battle</a>
-            <div class="auth_wrap">
-                <a href="#" class="button_light">Войти</a>
-                <a href="#" class="button_light">Зарегистрироваться</a>
-            </div>
+            @if (!ViewContext.HttpContext.User.Identity.IsAuthenticated)
+            {
+                <div class="auth_wrap">
+                    <a asp-controller="Account" asp-action="Login" class="button_light">Войти</a>
+                    <a asp-controller="Account" asp-action="Create" class="button_light">Зарегистрироваться</a>
+                </div>
+            }
+            else
+            {
+                <h3>Добро пожаловать, @ViewContext.HttpContext.User.Identity.Name</h3>
+                <a asp-controller="Account" asp-action="LogOut" class="button_light">Выйти</a>
+            }
         </div>
     </header>
     @RenderBody()
@@ -23,7 +31,7 @@
     <script src="~/js/extensions.js"></script>
     <script src="~/js/FieldClasses/Field.js"></script>
     <script src="~/js/fieldBehave.js"></script>
-    <script src="~/js/turnHandler.js"></script>
+    <script src="~/js/hubHandler.js"></script>
     <script src="~/js/script.js"></script>
 </body>
 </html>

@@ -11,16 +11,21 @@ using SeaBattle.Services;
 
 namespace SeaBattle.Controllers
 {
-    public class Main : Controller
+    [ApiController]
+    public class Game : ControllerBase
     {
+        GameService service;
         IHubContext<GameHub> hubContext;
-        public Main(IHubContext<GameHub> hub)
+        public Game(IHubContext<GameHub> hub, GameService s)
         {
             hubContext = hub;
+            service = s;
         }
-        public IActionResult Index()
+        [Route("/api/findEnemy")]
+        public bool FindEnemy()
         {
-            return View();
+            service.FindEnemy();
+            return true;
         }
     }
 }

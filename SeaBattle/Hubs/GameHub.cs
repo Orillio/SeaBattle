@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SeaBattle.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,10 @@ namespace SeaBattle.Hubs
 {
     public class GameHub : Hub
     {
+        Random r = new Random();
         public async Task Send(string message)
         {
-            await Clients.All.SendCoreAsync("Send", new object[] { "Hello"});
+            await Clients.All.SendCoreAsync("Send", new object[] { Context.UserIdentifier });
         }
     }
 }

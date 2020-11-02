@@ -14,10 +14,18 @@ class Field{
         //     }
         // }
     }
-
+    toJSON(){
+        var e = this.matrix;
+        var obj = {
+            matrix: this.matrix, 
+            ships: this.ships,
+            cellSize: this.#cellSize
+        }
+        return JSON.stringify(obj);
+    }
     getCoordsByOffset(offsetX, offsetY){
-        let x = Math.floor(offsetX / 30.0);
-        let y = Math.floor(offsetY / 30.0);
+        let x = Math.floor(offsetX / this.#cellSize);
+        let y = Math.floor(offsetY / this.#cellSize);
         return {x, y};
     }
     placeDotOnField(x, y){
@@ -37,8 +45,7 @@ class Field{
         this.field.appendChild(div);
     }
     hit(x, y){ 
-
-        //TODO исправить баг с нажатием на одну и ту же клетку и добавить отображение точки в матрицу
+        if(this.#matrix[y][x] == 3 || this.#matrix[y][x] == 2) throw "Cannot hit";
 
         for (let i = 0; i < this.#ships.length; i++) {
             var hitIndex = 1;
@@ -47,6 +54,7 @@ class Field{
                     if(x == shipInd && y == this.#ships[i].y && !this.#ships[i].destroyed){
                         this.#ships[i].hitShip(hitIndex);
                         this.placeHitOnField(x, y);
+                        this.#matrix[y][x] = 2;
                         return true;
                     }
                     hitIndex++;
@@ -57,6 +65,7 @@ class Field{
                     if(y == shipInd && x == this.#ships[i].x && !this.#ships[i].destroyed){
                         this.#ships[i].hitShip(hitIndex);
                         this.placeHitOnField(x, y);
+                        this.#matrix[y][x] = 2;
                         return true;
                     }
                     hitIndex++;
@@ -68,6 +77,7 @@ class Field{
         return false;
     }
     cleanField(){
+        this.#ships = [];
         this.field.innerHTML = '';
     }
     randomLocationShips(){

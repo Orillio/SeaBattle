@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SeaBattle.Models;
 using SeaBattle.Hubs;
+using SeaBattle.Services;
 
 namespace SeaBattle
 {
@@ -26,6 +27,8 @@ namespace SeaBattle
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<GameService>();
             services.AddSignalR();
             services.AddSession();
             services.AddAuthentication();
@@ -34,9 +37,17 @@ namespace SeaBattle
             {
                 o.UseSqlServer(configuration["Data:Identity:ConnectionString"]);
             });
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<IdentityContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 5;
+            })
+            .AddDefaultTokenProviders()
+            .AddEntityFrameworkStores<IdentityContext>();
+
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 

@@ -2,7 +2,7 @@ $gray_text: #555;
 $light_gray_text: #aaa;
 $light: #e7e7e7;
 $shadow: 0px 0px 40px 1px $light;
-
+$c: 'Cuprum';
 *, *::after, *::before {
   padding: 0;
   margin: 0;
@@ -46,7 +46,7 @@ body {
   min-height: 4000px;
   color: $gray_text;
   background-color: #fff;
-  font-family: 'Cuprum';
+  font-family: $c;
   // background: url(/img/textures/bg.png);
 }
 header{
@@ -73,6 +73,7 @@ header{
   }
 }
 .button_light{
+  background-color: transparent;
   user-select: none;
   cursor: pointer;
   overflow: hidden;
@@ -156,8 +157,6 @@ main{
   color: rgb(55, 125, 255);
 }
 .field_markup{
-  cursor: pointer;
-  z-index: 111;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -210,6 +209,14 @@ main{
   background-size: contain;
   background-position: center center;
 }
+
+.clickable{
+  cursor: pointer;
+  width: 100%;
+  position: absolute;
+  z-index: 1111;
+  height: 100%;
+}
 .onedeck-rotated{
   height: 30px;
 }
@@ -233,4 +240,45 @@ main{
 }
 .fourdeck{
   width: 120px;
+}
+.form{
+  display: inline-flex;
+  flex-direction: column;
+}
+.input{
+  color: $gray_text;
+  font-family: $c;
+  border-radius: 5px;
+  line-height: 10px;
+  border: 1px solid rgb(160, 160, 160);
+  padding: 10px 15px;
+  font-size: 16px;
+  -webkit-transition: all .4s ease;
+  transition: all .4s ease;
+  &:hover,&:focus {
+    background-color: rgb(230, 230, 230);
+  }
+  &.each{
+    margin-top: 40px;
+  }
+  
+}
+.button_light.mt{
+  color: $gray_text;
+  margin-top: 40px;
+  font-family: $c;
+  &:hover{
+    background-color: rgb(230, 230, 230);
+  }
+}
+.dark_rect{
+  position: absolute;
+  width: 101%;
+  height: 101%;
+  color: #fff;
+  font-size: 25px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

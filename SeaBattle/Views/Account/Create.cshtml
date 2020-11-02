@@ -1,13 +1,12 @@
 ﻿@model LoginForm
 <main>
     <div class="container">
-        <h1>Войти в систему</h1>
-        <form method="POST" asp-controller="Account" asp-action="Login" class="form">
+        <h1>Зарегистрироваться в системе</h1>
+        <form method="POST" asp-controller="Account" asp-action="Create" class="form">
             <div asp-validation-summary="All"></div>
-            <input type="hidden" asp-for="ReturnUrl"/>
             <input asp-for="Username" placeholder="Login" class="input each" type="text">
             <input asp-for="Password" placeholder="Password" class="input each" type="text">
-            <button class="button_light mt">Войти</button>
+            <button class="button_light mt">Зарегистрироваться</button>
         </form>
     </div>
 </main>
