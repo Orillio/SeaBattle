@@ -5,14 +5,19 @@ class Field{
     #cellSize = 30;
     get matrix(){return this.#matrix}
     get ships(){return this.#ships}
-    setEnemyField(field){
-        this.#matrix = field.matrix;
-        this.#ships = field.ships;
-        // for (let i = 0; i < 10; i++) {
-        //     for (let j = 0; j < 10; j++) {
-            
-        //     }
-        // }
+    setEnemyField(data){
+        let parsedJSON = JSON.parse(data);
+        this.#matrix = parsedJSON.matrix;
+        this.#ships = parsedJSON.ships;
+    }
+    toJSONstring(){
+        var e = this.matrix;
+        var obj = {
+            matrix: this.matrix, 
+            ships: this.ships,
+            cellSize: this.#cellSize
+        }
+        return JSON.stringify(obj);
     }
     toJSON(){
         var e = this.matrix;
@@ -21,7 +26,7 @@ class Field{
             ships: this.ships,
             cellSize: this.#cellSize
         }
-        return JSON.stringify(obj);
+        return obj;
     }
     getCoordsByOffset(offsetX, offsetY){
         let x = Math.floor(offsetX / this.#cellSize);
@@ -52,7 +57,7 @@ class Field{
             if(this.#ships[i].kx == 1){
                 for (let shipInd = this.#ships[i].x; shipInd <= this.#ships[i].x + this.#ships[i].decks - 1; shipInd++) {
                     if(x == shipInd && y == this.#ships[i].y && !this.#ships[i].destroyed){
-                        this.#ships[i].hitShip(hitIndex);
+                        this.#ships[i].hits.push(hitIndex); 
                         this.placeHitOnField(x, y);
                         this.#matrix[y][x] = 2;
                         return true;
@@ -63,7 +68,7 @@ class Field{
             else{
                 for (let shipInd = this.#ships[i].y; shipInd <= this.#ships[i].y + this.#ships[i].decks - 1; shipInd++) {
                     if(y == shipInd && x == this.#ships[i].x && !this.#ships[i].destroyed){
-                        this.#ships[i].hitShip(hitIndex);
+                        this.#ships[i].hits.push(hitIndex); 
                         this.placeHitOnField(x, y);
                         this.#matrix[y][x] = 2;
                         return true;
@@ -151,9 +156,7 @@ class Field{
 }
 class Ship{
     hitShip(hitIndex) { 
-        if(!this.destroyed){
-            this.hits.push(hitIndex); 
-        }
+        
     }
 
     createShip(cellsize){

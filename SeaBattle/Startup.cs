@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using SeaBattle.Models;
 using SeaBattle.Hubs;
 using SeaBattle.Services;
+using SeaBattle.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SeaBattle
 {
@@ -28,6 +30,7 @@ namespace SeaBattle
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             services.AddSingleton<GameService>();
             services.AddSignalR();
             services.AddSession();

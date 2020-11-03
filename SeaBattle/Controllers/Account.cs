@@ -40,7 +40,7 @@ namespace SeaBattle.Controllers
                     await signIn.PasswordSignInAsync(user, form.Password, false, false);
                     return Redirect("/");
                 }
-                ModelState.AddModelError(null, "Ошибка в регистрации");
+                ModelState.AddModelError("", "Ошибка в регистрации");
             }
             return View(form);
         }

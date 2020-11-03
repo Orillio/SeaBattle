@@ -11,8 +11,7 @@ using SeaBattle.Services;
 
 namespace SeaBattle.Controllers
 {
-    [ApiController]
-    public class Game : ControllerBase
+    public class Game : Controller
     {
         GameService service;
         IHubContext<GameHub> hubContext;
@@ -22,10 +21,17 @@ namespace SeaBattle.Controllers
             service = s;
         }
         [Route("/api/findEnemy")]
-        public bool FindEnemy()
+        public IActionResult FindEnemy()
         {
             service.FindEnemy();
-            return true;
+            return Ok();
+        }
+        [HttpPost]
+        [Route("/api/sendField")]
+        public async Task<IActionResult> SendField(string json)
+        {
+            await service.SendField(json.ToString());
+            return Ok();
         }
     }
 }

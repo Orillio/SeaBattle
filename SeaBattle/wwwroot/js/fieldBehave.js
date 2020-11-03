@@ -15,12 +15,7 @@ $(document).ready(function () {
     });
     $(".player2_field .clickable").click(e =>{
         let res = enemyfield.getCoordsByOffset(e.offsetX, e.offsetY);
-        try{
-            enemyfield.hit(res.x, res.y);
-        }
-        catch{
-            console.log("catched");
-        }
+        enemyfield.hit(res.x, res.y);
     });
     $('.find_enemy').click(() =>{
         hub.findEnemy();

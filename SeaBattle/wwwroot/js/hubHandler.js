@@ -11,21 +11,28 @@ class hubHandler{
     }
     start(){
         this.hubConnection.start();
+        this.onAllMethods();
     }
     findEnemy(){
+        $.get({
+            url: "/api/findEnemy",
+        });
+    }
+    onAllMethods(){
         this.hubConnection.on('FindEnemy', function(data){
             console.log(data);
         });
-        $.get({
-            url: "/api/findEnemy",
-            success: () => console.log("Worked")
+        this.hubConnection.on('ReceiveField', function(data){
+            console.log(data);
+            enemyfield.setEnemyField(data);
         });
-    }
-    on(method, func){
-        this.hubConnection.on(method, func);
-    }
-    invoke(method, jsonObj){
-        this.hubConnection.invoke(method, jsonObj.toJSON());
+        this.hubConnection.on('SendField', function(data){
+            var json = ownfield.toJSONstring();
+            $.post({
+                url: "/api/sendField",
+                data: "json=" + json
+            });
+        });
     }
     changeMove(){
         this.hubConnection.invoke("IsMyTurn")
