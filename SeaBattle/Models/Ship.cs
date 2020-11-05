@@ -12,7 +12,7 @@ namespace SeaBattle.Models
         public int kx { get; set; }
         public int ky { get; set; }
         public int decks { get; set; }
-        public int[] hits { get; set; }
+        public int hits { get; set; }
 
     }
 }

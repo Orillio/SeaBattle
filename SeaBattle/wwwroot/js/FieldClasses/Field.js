@@ -9,15 +9,31 @@ class Field{
         let parsedJSON = JSON.parse(data);
         this.#matrix = parsedJSON.matrix;
         this.#ships = parsedJSON.ships;
+
+        for (let y = 0; y < this.#matrix.length; y++) {
+            for (let x = 0; x < this.#matrix[y].length; x++) {
+                if(this.#matrix[y][x] == 2) this.placeHitOnField(x, y);
+                else if(this.#matrix[y][x] == 3) this.placeDotOnField(x, y);
+            }
+        }
+    }
+    setOwnField(data){
+        this.cleanField();
+        let parsedJSON = JSON.parse(data);
+        this.#matrix = parsedJSON.matrix;
+        this.#ships = parsedJSON.ships;
+        for (let i = 0; i < this.#ships.length; i++) {
+            this.field.appendChild(this.createShip(this.#ships[i]));
+        }
+        for (let y = 0; y < this.#matrix.length; y++) {
+            for (let x = 0; x < this.#matrix[y].length; x++) {
+                if(this.#matrix[y][x] == 2) this.placeHitOnField(x, y);
+                else if(this.#matrix[y][x] == 3) this.placeDotOnField(x, y);
+            }
+        }
     }
     toJSONstring(){
-        var e = this.matrix;
-        var obj = {
-            matrix: this.matrix, 
-            ships: this.ships,
-            cellSize: this.#cellSize
-        }
-        return JSON.stringify(obj);
+        return JSON.stringify(this.toJSON());
     }
     toJSON(){
         var e = this.matrix;
@@ -50,36 +66,37 @@ class Field{
         this.field.appendChild(div);
     }
     hit(x, y){ 
-        if(this.#matrix[y][x] == 3 || this.#matrix[y][x] == 2) throw "Cannot hit";
+        if(this.#matrix == undefined) return;
+        if(this.#matrix[y][x] == 3 || this.#matrix[y][x] == 2) return;
 
+        let shipIndex = -1;
         for (let i = 0; i < this.#ships.length; i++) {
-            var hitIndex = 1;
             if(this.#ships[i].kx == 1){
                 for (let shipInd = this.#ships[i].x; shipInd <= this.#ships[i].x + this.#ships[i].decks - 1; shipInd++) {
-                    if(x == shipInd && y == this.#ships[i].y && !this.#ships[i].destroyed){
-                        this.#ships[i].hits.push(hitIndex); 
+                    if(x == shipInd && y == this.#ships[i].y){
+                        shipIndex = i;
+                        this.#ships[i].hits++;
                         this.placeHitOnField(x, y);
                         this.#matrix[y][x] = 2;
-                        return true;
+                        return {x, y, shipIndex};
                     }
-                    hitIndex++;
                 }
             }
             else{
                 for (let shipInd = this.#ships[i].y; shipInd <= this.#ships[i].y + this.#ships[i].decks - 1; shipInd++) {
-                    if(y == shipInd && x == this.#ships[i].x && !this.#ships[i].destroyed){
-                        this.#ships[i].hits.push(hitIndex); 
+                    if(y == shipInd && x == this.#ships[i].x){
+                        shipIndex = i;
+                        this.#ships[i].hits++;
                         this.placeHitOnField(x, y);
                         this.#matrix[y][x] = 2;
-                        return true;
+                        return {x, y, shipIndex};
                     }
-                    hitIndex++;
                 }
             }
         }
         this.placeDotOnField(x, y);
         this.#matrix[y][x] = 3;
-        return false;
+        return {x, y, shipIndex};
     }
     cleanField(){
         this.#ships = [];
@@ -93,10 +110,49 @@ class Field{
                 let coords = this.getRandomCoords(this.#shipsCounter[i]);
                 let ship = new Ship(coords.x, coords.y, coords.kx, coords.ky, coords.decks);
                 this.fillShipInMatrix(ship);
-                this.field.appendChild(ship.createShip(this.#cellSize));
+                this.field.appendChild(this.createShip(ship));
                 this.#ships.push(ship);
             }
         }
+    }
+    createShip(ship){
+        let div = document.createElement('div');
+        div.classList.add('ship');
+        
+        div.style.left = `${ship.x * this.#cellSize}px`;
+        div.style.top = `${ship.y * this.#cellSize}px`;
+
+        
+        if(ship.kx == 1){
+            if(ship.decks == 4){
+                div.classList.add('fourdeck');
+            }
+            else if(ship.decks == 3){
+                div.classList.add('threedeck');
+            } 
+            else if(ship.decks == 2){
+                div.classList.add('twodeck');
+            } 
+            else if(ship.decks == 1){
+                div.classList.add('onedeck');
+            }
+        }
+        else{
+            div.classList.add('rotated');
+            if(ship.decks == 4){
+                div.classList.add('fourdeck-rotated');
+            }
+            else if(ship.decks == 3){
+                div.classList.add('threedeck-rotated');
+            } 
+            else if(ship.decks == 2){
+                div.classList.add('twodeck-rotated');
+            } 
+            else if(ship.decks == 1){
+                div.classList.add('onedeck-rotated');
+            }
+        }
+        return div;
     }
     fillShipInMatrix(ship){
         if(ship.kx == 1){
@@ -155,60 +211,12 @@ class Field{
     }
 }
 class Ship{
-    hitShip(hitIndex) { 
-        
-    }
-
-    createShip(cellsize){
-        let div = document.createElement('div');
-        div.classList.add('ship');
-        
-        div.style.left = `${this.x * cellsize}px`;
-        div.style.top = `${this.y * cellsize}px`;
-
-        
-        if(this.kx == 1){
-            if(this.decks == 4){
-                div.classList.add('fourdeck');
-            }
-            else if(this.decks == 3){
-                div.classList.add('threedeck');
-            } 
-            else if(this.decks == 2){
-                div.classList.add('twodeck');
-            } 
-            else if(this.decks == 1){
-                div.classList.add('onedeck');
-            }
-        }
-        else{
-            div.classList.add('rotated');
-            if(this.decks == 4){
-                div.classList.add('fourdeck-rotated');
-            }
-            else if(this.decks == 3){
-                div.classList.add('threedeck-rotated');
-            } 
-            else if(this.decks == 2){
-                div.classList.add('twodeck-rotated');
-            } 
-            else if(this.decks == 1){
-                div.classList.add('onedeck-rotated');
-            }
-        }
-        return div;
-    }
     constructor(x, y, kx, ky, decks){
         this.x = x;
         this.y = y;
         this.kx = kx;
         this.ky = ky;
         this.decks = decks;
-        this.hits = [];
+        this.hits;
     }
-    get destroyed() {
-        if(this.decks == this.hits.length) return true;
-        return false;
-    }
-
 }

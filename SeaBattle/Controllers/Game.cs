@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json.Linq;
 using SeaBattle.Hubs;
 using SeaBattle.Services;
 
@@ -20,10 +22,16 @@ namespace SeaBattle.Controllers
             hubContext = hub;
             service = s;
         }
-        [Route("/api/findEnemy")]
-        public IActionResult FindEnemy()
+        [Route("/api/enterQueue")]
+        public IActionResult EnterQueue()
         {
-            service.FindEnemy();
+            service.EnterQueue();
+            return Ok();
+        }
+        [Route("/api/escapeQueue")]
+        public IActionResult EscapeQueue()
+        {
+            service.EscapeQueue();
             return Ok();
         }
         [HttpPost]
@@ -33,5 +41,27 @@ namespace SeaBattle.Controllers
             await service.SendField(json.ToString());
             return Ok();
         }
+        [Route("/api/myGameBegan")]
+        public async Task<bool> ReturnGameFieldIfGameStarted()
+        {
+            return await service.ReturnGameFieldIfGameStarted();
+        }
+        
+        [Route("/api/giveUp")]
+        public async Task GiveUp()
+        {
+            await service.GiveUp();
+        }
+        [HttpPost]
+        [Route("/api/hitEnemy")]
+        public async Task HitEnemy(string json)
+        {
+            var obj = JObject.Parse(json);
+            var x = obj["x"].Value<int>();
+            var y = obj["y"].Value<int>();
+            var i = obj["shipIndex"].Value<int>();
+            await service.HitEnemy(x, y, i);
+        }
+        
     }
 }

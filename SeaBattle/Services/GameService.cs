@@ -14,8 +14,40 @@ namespace SeaBattle.Services
     {
         IHttpContextAccessor accessor;
         IHubContext<GameHub> hubContext;
-        List<Session> Sessions { get; set; } = new List<Session>();
-        List<Player> PendingPlayers { get; set; } = new List<Player>();
+        public List<Session> Sessions { get; set; } = new List<Session>();
+        public List<Player> PendingPlayers { get; set; } = new List<Player>();
+
+        public string ContextPlayerName =>
+            accessor.HttpContext.User.Identity.Name;
+
+        public Session ContextSession =>
+            Sessions.FirstOrDefault(x => x.Player1.Name == ContextPlayerName || x.Player2.Name == ContextPlayerName);
+
+        public Player ContextSender
+        {
+            get
+            {
+                if (ContextSession != null)
+                {
+                    return ContextSession.Player1.Name == ContextPlayerName ? ContextSession.Player1 : ContextSession.Player2;
+                }
+                return null;
+            }
+        }
+
+        public Player ContextReceiver
+        {
+            get
+            {
+                if (ContextSession != null)
+                {
+                    return ContextSession.Player1.Name == ContextPlayerName ? ContextSession.Player2 : ContextSession.Player1;
+                }
+                return null;
+            }
+        }
+
+        
         public GameService(IHttpContextAccessor acc, IHubContext<GameHub> hc)
         {
             hubContext = hc;
@@ -24,9 +56,19 @@ namespace SeaBattle.Services
             //через контроллер информация будет отправляться сервису
             // в сессиях организовать игру между игроками
         }
-        public void FindEnemy()
+
+        public async Task GiveUp()
         {
-            var name = accessor.HttpContext.User.Identity.Name;
+            await hubContext.Clients.Users(ContextReceiver.Name, ContextSender.Name)
+                .SendCoreAsync("OnSurrender", new object[1]);
+            await ContextSession.Message(ContextSender, "Вы сдались, вы можете начать новую игру.");
+            await ContextSession.Message(ContextReceiver, "Вы победили! Ваш оппонент сдался, вы можете начать новую игру.");
+            Sessions.Remove(ContextSession);
+        }
+
+        public void EnterQueue()
+        {
+            var name = ContextPlayerName;
             if (name == null) return;
             var user = PendingPlayers.FirstOrDefault(x => x.Name != name);
             if (user != null)
@@ -35,27 +77,49 @@ namespace SeaBattle.Services
                 Sessions.Add(session);
                 PendingPlayers.Remove(user);
             }
-            else if (!PendingPlayers.Any(x => x.Name == name) || !Sessions.Any(x => x.Player1.Name == name || x.Player2.Name == name))
+            else if (!PendingPlayers.Any(x => x.Name == name) && !Sessions.Any(x => x.Player1.Name == name || x.Player2.Name == name))
             {
                 PendingPlayers.Add(new Player() { Name = name });
             }
             else return;
         }
+
+        public void EscapeQueue()
+        {
+            var name = ContextPlayerName;
+            var escPlayer = PendingPlayers.FirstOrDefault(x => x.Name == name);
+            if(escPlayer != null) PendingPlayers.Remove(escPlayer);
+        }
+        public async Task HitEnemy(int x, int y, int shipIndex)
+        {
+            ContextReceiver.Field.Hit(x, y, shipIndex);
+            await hubContext.Clients.User(ContextReceiver.Name)
+                .SendCoreAsync("ReceiveOwnField", new object[] { ContextReceiver?.Field.SerializeJson() });
+        }
+
+        public async Task<bool> ReturnGameFieldIfGameStarted()
+        {
+            if(ContextSession != null)
+            {
+                await hubContext.Clients.User(ContextSender.Name)
+                    .SendCoreAsync("ReceiveOwnField", new object[] { ContextSender?.Field.SerializeJson() });
+
+                await hubContext.Clients.User(ContextSender.Name)
+                    .SendCoreAsync("ReceiveEnemyField", new object[] { ContextReceiver?.Field.SerializeJson() });
+
+                return true;
+            }
+            return false;
+        }
         public async Task SendField(string json)
         {
-            var name = accessor.HttpContext.User.Identity.Name;
-            var session = Sessions.FirstOrDefault(x => x.Player1.Name == name || x.Player2.Name == name);
-            
-            if (session != null)
+
+            ContextSender.Field = Field.DeserializeJson(json);
+
+            if(ContextReceiver?.Name != null)
             {
-                var user = session.Player1.Name == name ? session.Player2.Name : session.Player1.Name;
-                await hubContext.Clients.User(user)
-                    .SendCoreAsync("ReceiveField", new object[] { json });
-            }
-            else
-            {
-                await hubContext.Clients.User(name)
-                    .SendCoreAsync("Error", new object[] { @"Не получилось отправить данные противнику" });
+                await hubContext.Clients.User(ContextReceiver.Name)
+                    .SendCoreAsync("ReceiveEnemyField", new object[] { json });
             }
 
         }

@@ -19,7 +19,10 @@
   </header>
   <main>
     <div class="container">
-      <h1>Морской бой онлайн</h1>
+      <div class="titles_wrapper">
+        <h1>Морской бой онлайн</h1>
+        <h2 id="message">Найдите противника для начала игры</h2>
+      </div>
       <div class="game_container">
         <div class="fields_wrapper">
           <div class="own_field">
@@ -55,7 +58,7 @@
               <div id="ownfield"></div>
               <div class="clickable"></div>
             </div>
-            <div class="button_light find_enemy">Найти противника</div>
+            <div class="button_light" id="action_button">Найти противника</div>
           </div>
           <div class="enemy_field">
             <h3>Поле Player2</h3>
@@ -88,7 +91,7 @@
               </div>
               <div id="enemyfield"></div>
               <div class="clickable"></div>
-              <div class="dark_rect">Найдите противника</div>
+              <div id="dark_rect">Найдите противника</div>
             </div>
           </div>
         </div>

@@ -17,3 +17,13 @@ function createMatrix(){
     }
     return matrix;
 }
+function redMessage(data){
+    message = document.getElementById("message");
+    message.style.color = "#f44";
+    message.innerText = data;
+}
+function normalMessage(data){
+    message = document.getElementById("message");
+    message.style.color = "#555";
+    message.innerText = data;
+}
