@@ -61,8 +61,10 @@ namespace SeaBattle.Services
         {
             await hubContext.Clients.Users(ContextReceiver.Name, ContextSender.Name)
                 .SendCoreAsync("OnSurrender", new object[1]);
-            await ContextSession.Message(ContextSender, "Вы сдались, вы можете начать новую игру.");
-            await ContextSession.Message(ContextReceiver, "Вы победили! Ваш оппонент сдался, вы можете начать новую игру.");
+            await ContextSession.Message(ContextSender, "Вы сдались, вы можете начать новую игру.",
+                Session.MessageType.Red);
+            await ContextSession.Message(ContextReceiver, "Вы победили! Ваш оппонент сдался, вы можете начать новую игру.",
+                Session.MessageType.Blue);
             Sessions.Remove(ContextSession);
         }
 
@@ -92,6 +94,24 @@ namespace SeaBattle.Services
         }
         public async Task HitEnemy(int x, int y, int shipIndex)
         {
+            if (ContextSession == null) return;
+            if (shipIndex == -1)
+            {
+                await ContextSession.Message(ContextSender,
+                    $"Вы промахнулись! Ход игрока - {ContextReceiver.Name}", Session.MessageType.Red);
+
+                await ContextSession.Message(ContextReceiver,
+                    $"Оппонент промахнулся! Ход игрока - {ContextReceiver.Name}", Session.MessageType.Blue);
+                ContextSession.ChangeTurn();
+            }
+            else
+            {
+                await ContextSession.Message(ContextSender,
+                    $"Вы попали! Ход игрока - {ContextSender.Name}", Session.MessageType.Blue);
+                await ContextSession.Message(ContextReceiver,
+                    $"Оппонент попал! Ход игрока - {ContextSender.Name}", Session.MessageType.Red);
+            }
+
             ContextReceiver.Field.Hit(x, y, shipIndex);
             await hubContext.Clients.User(ContextReceiver.Name)
                 .SendCoreAsync("ReceiveOwnField", new object[] { ContextReceiver?.Field.SerializeJson() });
@@ -106,6 +126,9 @@ namespace SeaBattle.Services
 
                 await hubContext.Clients.User(ContextSender.Name)
                     .SendCoreAsync("ReceiveEnemyField", new object[] { ContextReceiver?.Field.SerializeJson() });
+
+                await ContextSession.Message(ContextSender,
+                    $"Ход игрока - {(ContextSender.MyTurn ? ContextSender.Name : ContextReceiver.Name)}", Session.MessageType.Blue);
 
                 return true;
             }

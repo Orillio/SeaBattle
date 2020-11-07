@@ -10,6 +10,10 @@ class Field{
         this.#matrix = parsedJSON.matrix;
         this.#ships = parsedJSON.ships;
 
+        for (let i = 0; i < this.#ships.length; i++) {
+            this.placeDestroyedSquare(this.#ships[i]);
+        }
+
         for (let y = 0; y < this.#matrix.length; y++) {
             for (let x = 0; x < this.#matrix[y].length; x++) {
                 if(this.#matrix[y][x] == 2) this.placeHitOnField(x, y);
@@ -24,6 +28,7 @@ class Field{
         this.#ships = parsedJSON.ships;
         for (let i = 0; i < this.#ships.length; i++) {
             this.field.appendChild(this.createShip(this.#ships[i]));
+            
         }
         for (let y = 0; y < this.#matrix.length; y++) {
             for (let x = 0; x < this.#matrix[y].length; x++) {
@@ -31,6 +36,7 @@ class Field{
                 else if(this.#matrix[y][x] == 3) this.placeDotOnField(x, y);
             }
         }
+        
     }
     toJSONstring(){
         return JSON.stringify(this.toJSON());
@@ -78,6 +84,7 @@ class Field{
                         this.#ships[i].hits++;
                         this.placeHitOnField(x, y);
                         this.#matrix[y][x] = 2;
+                        this.placeDestroyedSquare(this.#ships[i]);
                         return {x, y, shipIndex};
                     }
                 }
@@ -89,12 +96,14 @@ class Field{
                         this.#ships[i].hits++;
                         this.placeHitOnField(x, y);
                         this.#matrix[y][x] = 2;
+                        this.placeDestroyedSquare(this.#ships[i]);
                         return {x, y, shipIndex};
                     }
                 }
             }
         }
         this.placeDotOnField(x, y);
+        myTurn = false;
         this.#matrix[y][x] = 3;
         return {x, y, shipIndex};
     }
@@ -122,7 +131,8 @@ class Field{
         div.style.left = `${ship.x * this.#cellSize}px`;
         div.style.top = `${ship.y * this.#cellSize}px`;
 
-        
+        this.placeDestroyedSquare(ship);
+
         if(ship.kx == 1){
             if(ship.decks == 4){
                 div.classList.add('fourdeck');
@@ -153,6 +163,47 @@ class Field{
             }
         }
         return div;
+    }
+    placeDestroyedSquare(ship){
+        if(ship.decks != ship.hits) return;
+
+        let div = document.createElement('div');
+
+        div.style.top = `${ship.y * this.#cellSize}px`;
+        div.style.left = `${ship.x * this.#cellSize}px`;
+
+        div.classList.add("destroyed");
+        if(ship.kx == 1){
+            div.classList.add("horizontal");
+            if(ship.decks == 4){
+                div.classList.add('four');
+            }
+            else if(ship.decks == 3){
+                div.classList.add('three');
+            } 
+            else if(ship.decks == 2){
+                div.classList.add('two');
+            } 
+            else if(ship.decks == 1){
+                div.classList.add('one');
+            }
+        }
+        else{
+            div.classList.add('vertical');
+            if(ship.decks == 4){
+                div.classList.add('four');
+            }
+            else if(ship.decks == 3){
+                div.classList.add('three');
+            } 
+            else if(ship.decks == 2){
+                div.classList.add('two');
+            } 
+            else if(ship.decks == 1){
+                div.classList.add('one');
+            }
+        }
+        this.field.appendChild(div);
     }
     fillShipInMatrix(ship){
         if(ship.kx == 1){
@@ -217,6 +268,6 @@ class Ship{
         this.kx = kx;
         this.ky = ky;
         this.decks = decks;
-        this.hits;
+        this.hits = 0;
     }
 }

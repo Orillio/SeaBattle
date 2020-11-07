@@ -52,6 +52,10 @@ namespace SeaBattle.Controllers
         {
             await service.GiveUp();
         }
+
+        [Route("/api/isMyTurn")]
+        public bool IsMyTurn() => service.ContextSender.MyTurn;
+
         [HttpPost]
         [Route("/api/hitEnemy")]
         public async Task HitEnemy(string json)

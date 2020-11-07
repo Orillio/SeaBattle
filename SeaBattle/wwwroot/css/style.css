@@ -326,6 +326,7 @@ main .titles_wrapper {
 }
 
 #dark_rect {
+  z-index: 111111;
   position: absolute;
   width: 101%;
   height: 101%;
@@ -341,4 +342,57 @@ main .titles_wrapper {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+#message {
+  font-size: 20px;
+}
+
+.destroyed {
+  position: absolute;
+  z-index: 999999;
+  cursor: pointer;
+  background: url(../img/textures/destroyed.png);
+}
+.destroyed.horizontal {
+  height: 30px;
+}
+.destroyed.horizontal.one {
+  width: 30px;
+}
+.destroyed.horizontal.two {
+  width: 60px;
+}
+.destroyed.horizontal.three {
+  width: 90px;
+}
+.destroyed.horizontal.four {
+  width: 120px;
+}
+.destroyed.vertical {
+  width: 30px;
+}
+.destroyed.vertical.one {
+  height: 30px;
+}
+.destroyed.vertical.two {
+  height: 60px;
+}
+.destroyed.vertical.three {
+  height: 90px;
+}
+.destroyed.vertical.four {
+  height: 120px;
+}
+
+@media (max-width: 830px) {
+  .fields_wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
 }

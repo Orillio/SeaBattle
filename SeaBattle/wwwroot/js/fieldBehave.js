@@ -1,6 +1,7 @@
 var ownfield;
 var enemyfield;
 var gameStarted;
+var myTurn;
 $(document).ready(function () {
     var action_button = document.getElementById("action_button");
     let isFinding = false; 
@@ -9,12 +10,12 @@ $(document).ready(function () {
     
     const hub = new hubHandler('/hub');
     hub.start();
-    
 
     $('.own_field .bluetext').click(() =>{
         ownfield.randomLocationShips();
     });
     $(".player2_field .clickable").click(e =>{
+        if(!myTurn) return;
         let coords = enemyfield.getCoordsByOffset(e.offsetX, e.offsetY);
         let res = enemyfield.hit(coords.x, coords.y);
         if(res != undefined){

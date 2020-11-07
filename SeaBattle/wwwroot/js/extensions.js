@@ -24,6 +24,6 @@ function redMessage(data){
 }
 function normalMessage(data){
     message = document.getElementById("message");
-    message.style.color = "#555";
+    message.style.color = "#2490ff";
     message.innerText = data;
 }

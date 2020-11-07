@@ -11,5 +11,6 @@ namespace SeaBattle.Models
         // которое отправляет новую информацию о поле другому игроку
         public string Name { get; set; }
         public Field Field { get; set; }
+        public bool MyTurn { get; set; }
     }
 }

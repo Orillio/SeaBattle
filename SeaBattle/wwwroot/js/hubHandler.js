@@ -55,7 +55,17 @@ class hubHandler{
             data: "json=" + data
         });
     }
-
+    isMyTurn(){
+        myturn = false;
+        $.get({
+            url: "/api/isMyTurn",
+            data: "json=" + data,
+            success: function(data){
+                myturn = data;
+            }
+        });
+        return myturn
+    }
     onAllMethods(){
         this.hubConnection.on('FindEnemy', function(data){});
         
@@ -64,9 +74,21 @@ class hubHandler{
             enemyfield.setEnemyField(enemyField);
             document.getElementById("action_button").innerText = "Сдаться";
             gameStarted = true;
+            $.get({
+                url: "/api/isMyTurn",
+                success: data =>{
+                    myTurn = data; 
+                }
+            });
         });
         this.hubConnection.on('ReceiveOwnField', function(ownField){
             ownfield.setOwnField(ownField);
+            $.get({
+                url: "/api/isMyTurn",
+                success: data =>{
+                    myTurn = data; 
+                }
+            });
         });
         
         this.hubConnection.on('SendField', function(data){
@@ -76,6 +98,9 @@ class hubHandler{
                 data: "json=" + json
             });
         });
+        this.hubConnection.on('ChangeTurn', function(data){
+            myTurn = data;
+        });
         this.hubConnection.on('OnSurrender', function(data){
             gameStarted = false;
             action_button.innerText = "Найти противника";
@@ -84,8 +109,11 @@ class hubHandler{
             enemyfield.cleanField();
             ownfield.randomLocationShips();
         });
-        this.hubConnection.on('OnMessage', function(data){
+        this.hubConnection.on('OnRedMessage', function(data){
             redMessage(data);
+        });
+        this.hubConnection.on('OnBlueMessage', function(data){
+            normalMessage(data);
         });
         setTimeout(() => {
             this.isGameBegan();

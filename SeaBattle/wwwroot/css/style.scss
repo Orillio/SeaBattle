@@ -258,6 +258,7 @@ main{
   }
 }
 #dark_rect{
+  z-index: 111111;
   position: absolute;
   width: 101%;
   height: 101%;
@@ -267,4 +268,49 @@ main{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+#message{
+  font-size: 20px;
+}
+.destroyed{
+  position: absolute;
+  z-index: 999999;
+  cursor: pointer;
+  background: url(../img/textures/destroyed.png);
+  &.horizontal{
+    height: 30px;
+    &.one{
+      width: 30px;
+    }
+    &.two{
+      width: 60px;
+    }
+    &.three{
+      width: 90px;
+    }
+    &.four{
+      width: 120px;
+    }
+  }
+  &.vertical{
+    width: 30px;
+    &.one{
+      height: 30px;
+    }
+    &.two{
+      height: 60px;
+    }
+    &.three{
+      height: 90px;
+    }
+    &.four{
+      height: 120px;
+    }
+  }
+}
+@media (max-width: 830px){
+  .fields_wrapper{
+    flex-direction: column;
+    align-items: center;
+  }
 }
