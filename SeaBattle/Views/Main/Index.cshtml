@@ -17,7 +17,14 @@
                         <div id="ownfield"></div>
                         <div class="clickable"></div>
                     </div>
-                    <div class="button_light" id="action_button">Найти противника</div>
+                  @if (ViewContext.HttpContext.User.Identity.IsAuthenticated)
+                   {
+                       <div class="button_light find_enemy_btn" id="action_button">Найти противника</div>
+                   }
+                   else
+                   {
+                       <a asp-action="Login" asp-controller="Account" class="button_light find_enemy_btn">Найти противника</a>
+                   }
                 </div>
                 <div class="enemy_field">
                     <h3>Поле оппонента</h3>

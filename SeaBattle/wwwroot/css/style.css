@@ -106,7 +106,6 @@ header .container {
 
 main {
   padding-top: 50px;
-  margin-bottom: 40px;
 }
 main h1 {
   font-weight: 400;
@@ -218,7 +217,7 @@ main .titles_wrapper {
       justify-content: space-around;
 }
 
-#action_button {
+.find_enemy_btn {
   margin-top: 30px;
 }
 
@@ -405,11 +404,6 @@ main .titles_wrapper {
     margin-bottom: 30px;
   }
 }
-@media (max-width: 520px){
-  header h3{
-    font-size: 15px;
-  }
-}
 @media (max-width: 440px) {
   .button_light {
     font-size: 14px;
@@ -425,7 +419,7 @@ main .titles_wrapper {
     font-size: 25px;
   }
 
-  main.main .container {
+  main .container {
     padding: 0;
   }
 
@@ -438,7 +432,6 @@ main .titles_wrapper {
   }
 }
 @media (max-width: 380px) {
-
   #message {
     font-size: 18px;
   }
