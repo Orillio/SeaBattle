@@ -419,8 +419,15 @@ main .titles_wrapper {
     font-size: 25px;
   }
 
-  main .container {
+  main:not(.login) .container {
     padding: 0;
+  }
+
+  main.login {
+    margin-bottom: 40px;
+  }
+  main.login .container {
+    text-align: center;
   }
 
   main .titles_wrapper {
