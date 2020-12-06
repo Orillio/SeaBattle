@@ -13,11 +13,6 @@ namespace SeaBattle.Controllers
 {
     public class Main : Controller
     {
-        IHubContext<GameHub> hubContext;
-        public Main(IHubContext<GameHub> hub)
-        {
-            hubContext = hub;
-        }
         public IActionResult Index()
         {
             return View();

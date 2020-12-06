@@ -1,39 +1,39 @@
 class Field{
-    #ships = [];
-    #matrix;
-    #shipsCounter = [0, 4, 3, 2, 1];
-    #cellSize = 30;
-    get matrix(){return this.#matrix}
-    get ships(){return this.#ships}
+    ships = [];
+    matrix;
+    shipsCounter = [0, 4, 3, 2, 1];
+    cellSize = 30;
+    get matrix(){return this.matrix}
+    get ships(){return this.ships}
     setEnemyField(data){
         let parsedJSON = JSON.parse(data);
-        this.#matrix = parsedJSON.matrix;
-        this.#ships = parsedJSON.ships;
+        this.matrix = parsedJSON.matrix;
+        this.ships = parsedJSON.ships;
 
-        for (let i = 0; i < this.#ships.length; i++) {
-            this.placeDestroyedSquare(this.#ships[i]);
+        for (let i = 0; i < this.ships.length; i++) {
+            this.placeDestroyedSquare(this.ships[i]);
         }
 
-        for (let y = 0; y < this.#matrix.length; y++) {
-            for (let x = 0; x < this.#matrix[y].length; x++) {
-                if(this.#matrix[y][x] == 2) this.placeHitOnField(x, y);
-                else if(this.#matrix[y][x] == 3) this.placeDotOnField(x, y);
+        for (let y = 0; y < this.matrix.length; y++) {
+            for (let x = 0; x < this.matrix[y].length; x++) {
+                if(this.matrix[y][x] == 2) this.placeHitOnField(x, y);
+                else if(this.matrix[y][x] == 3) this.placeDotOnField(x, y);
             }
         }
     }
     setOwnField(data){
         this.cleanField();
         let parsedJSON = JSON.parse(data);
-        this.#matrix = parsedJSON.matrix;
-        this.#ships = parsedJSON.ships;
-        for (let i = 0; i < this.#ships.length; i++) {
-            this.field.appendChild(this.createShip(this.#ships[i]));
+        this.matrix = parsedJSON.matrix;
+        this.ships = parsedJSON.ships;
+        for (let i = 0; i < this.ships.length; i++) {
+            this.field.appendChild(this.createShip(this.ships[i]));
             
         }
-        for (let y = 0; y < this.#matrix.length; y++) {
-            for (let x = 0; x < this.#matrix[y].length; x++) {
-                if(this.#matrix[y][x] == 2) this.placeHitOnField(x, y);
-                else if(this.#matrix[y][x] == 3) this.placeDotOnField(x, y);
+        for (let y = 0; y < this.matrix.length; y++) {
+            for (let x = 0; x < this.matrix[y].length; x++) {
+                if(this.matrix[y][x] == 2) this.placeHitOnField(x, y);
+                else if(this.matrix[y][x] == 3) this.placeDotOnField(x, y);
             }
         }
         
@@ -46,57 +46,57 @@ class Field{
         var obj = {
             matrix: this.matrix, 
             ships: this.ships,
-            cellSize: this.#cellSize
+            cellSize: this.cellSize
         }
         return obj;
     }
     getCoordsByOffset(offsetX, offsetY){
-        let x = Math.floor(offsetX / this.#cellSize);
-        let y = Math.floor(offsetY / this.#cellSize);
+        let x = Math.floor(offsetX / this.cellSize);
+        let y = Math.floor(offsetY / this.cellSize);
         return {x, y};
     }
     placeDotOnField(x, y){
         var div = document.createElement('div');
         div.classList.add('dot');
-        div.style.left = `${x * this.#cellSize + 13}px`;
-        div.style.top = `${y * this.#cellSize + 13}px`;
+        div.style.left = `${x * this.cellSize + 13}px`;
+        div.style.top = `${y * this.cellSize + 13}px`;
 
         this.field.appendChild(div);
     }
     placeHitOnField(x, y){
         var div = document.createElement('div');
         div.classList.add('cross');
-        div.style.left = `${x * this.#cellSize + 4}px`;
-        div.style.top = `${y * this.#cellSize + 5}px`;
+        div.style.left = `${x * this.cellSize + 4}px`;
+        div.style.top = `${y * this.cellSize + 5}px`;
 
         this.field.appendChild(div);
     }
     hit(x, y){ 
-        if(this.#matrix == undefined) return;
-        if(this.#matrix[y][x] == 3 || this.#matrix[y][x] == 2) return;
+        if(this.matrix == undefined) return;
+        if(this.matrix[y][x] == 3 || this.matrix[y][x] == 2) return;
 
         let shipIndex = -1;
-        for (let i = 0; i < this.#ships.length; i++) {
-            if(this.#ships[i].kx == 1){
-                for (let shipInd = this.#ships[i].x; shipInd <= this.#ships[i].x + this.#ships[i].decks - 1; shipInd++) {
-                    if(x == shipInd && y == this.#ships[i].y){
+        for (let i = 0; i < this.ships.length; i++) {
+            if(this.ships[i].kx == 1){
+                for (let shipInd = this.ships[i].x; shipInd <= this.ships[i].x + this.ships[i].decks - 1; shipInd++) {
+                    if(x == shipInd && y == this.ships[i].y){
                         shipIndex = i;
-                        this.#ships[i].hits++;
+                        this.ships[i].hits++;
                         this.placeHitOnField(x, y);
-                        this.#matrix[y][x] = 2;
-                        this.placeDestroyedSquare(this.#ships[i]);
+                        this.matrix[y][x] = 2;
+                        this.placeDestroyedSquare(this.ships[i]);
                         return {x, y, shipIndex};
                     }
                 }
             }
             else{
-                for (let shipInd = this.#ships[i].y; shipInd <= this.#ships[i].y + this.#ships[i].decks - 1; shipInd++) {
-                    if(y == shipInd && x == this.#ships[i].x){
+                for (let shipInd = this.ships[i].y; shipInd <= this.ships[i].y + this.ships[i].decks - 1; shipInd++) {
+                    if(y == shipInd && x == this.ships[i].x){
                         shipIndex = i;
-                        this.#ships[i].hits++;
+                        this.ships[i].hits++;
                         this.placeHitOnField(x, y);
-                        this.#matrix[y][x] = 2;
-                        this.placeDestroyedSquare(this.#ships[i]);
+                        this.matrix[y][x] = 2;
+                        this.placeDestroyedSquare(this.ships[i]);
                         return {x, y, shipIndex};
                     }
                 }
@@ -104,23 +104,23 @@ class Field{
         }
         this.placeDotOnField(x, y);
         myTurn = false;
-        this.#matrix[y][x] = 3;
+        this.matrix[y][x] = 3;
         return {x, y, shipIndex};
     }
     cleanField(){
-        this.#ships = [];
+        this.ships = [];
         this.field.innerHTML = '';
     }
     randomLocationShips(){
         this.cleanField();
-        this.#matrix = createMatrix();
-        for (let i = 1; i < this.#shipsCounter.length; i++) {
+        this.matrix = createMatrix();
+        for (let i = 1; i < this.shipsCounter.length; i++) {
             for (let j = 0; j < i; j++) {
-                let coords = this.getRandomCoords(this.#shipsCounter[i]);
+                let coords = this.getRandomCoords(this.shipsCounter[i]);
                 let ship = new Ship(coords.x, coords.y, coords.kx, coords.ky, coords.decks);
                 this.fillShipInMatrix(ship);
                 this.field.appendChild(this.createShip(ship));
-                this.#ships.push(ship);
+                this.ships.push(ship);
             }
         }
     }
@@ -128,8 +128,8 @@ class Field{
         let div = document.createElement('div');
         div.classList.add('ship');
         
-        div.style.left = `${ship.x * this.#cellSize}px`;
-        div.style.top = `${ship.y * this.#cellSize}px`;
+        div.style.left = `${ship.x * this.cellSize}px`;
+        div.style.top = `${ship.y * this.cellSize}px`;
 
         this.placeDestroyedSquare(ship);
 
@@ -169,8 +169,8 @@ class Field{
 
         let div = document.createElement('div');
 
-        div.style.top = `${ship.y * this.#cellSize}px`;
-        div.style.left = `${ship.x * this.#cellSize}px`;
+        div.style.top = `${ship.y * this.cellSize}px`;
+        div.style.left = `${ship.x * this.cellSize}px`;
 
         div.classList.add("destroyed");
         if(ship.kx == 1){
@@ -208,11 +208,11 @@ class Field{
     fillShipInMatrix(ship){
         if(ship.kx == 1){
             for (let i = ship.x; i < ship.x + ship.decks; i++) {
-                this.#matrix[ship.y][i] = 1;
+                this.matrix[ship.y][i] = 1;
             }
         } else{
             for (let i = ship.y; i < ship.y + ship.decks; i++) {
-                this.#matrix[i][ship.x] = 1;
+                this.matrix[i][ship.x] = 1;
             }
         }
     }
@@ -232,7 +232,7 @@ class Field{
 
         for (let i = fromY; i <= toY; i++) {
             for (let j = fromX; j <= toX; j++) {
-                if (this.#matrix[i][j] == 1) return false;
+                if (this.matrix[i][j] == 1) return false;
             }
         }
         return true;

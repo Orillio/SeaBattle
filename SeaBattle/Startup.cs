@@ -33,6 +33,8 @@ namespace SeaBattle
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             services.AddSingleton<GameService>();
             services.AddSignalR();
+            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddAuthentication();
             services.AddAuthorization();
@@ -56,15 +58,17 @@ namespace SeaBattle
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseDeveloperExceptionPage();
-            app.UseStaticFiles();
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: null,
+                    name: "default",
                     template: "{controller=Main}/{action=Index}");
             });
             app.UseEndpoints(endpoints =>

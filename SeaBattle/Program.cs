@@ -21,6 +21,6 @@ namespace SeaBattle
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).UseDefaultServiceProvider(o => o.ValidateScopes = false);
     }
 }

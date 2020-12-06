@@ -37,12 +37,15 @@ class hubHandler{
             success: function (began) {
                 if(!began){
                     ownfield.randomLocationShips();
+                    return;
                 }
                 else{
                     document.getElementById("dark_rect").style.display = "none";
+                    return;
                 }
             }
         });
+        ownfield.randomLocationShips();
     }
     hitEnemy(x, y, shipIndex){
         let data = JSON.stringify({
