@@ -34,7 +34,7 @@ $(document).ready(function () {
             action_button.innerText = "Найти противника";
         }
         else if(gameStarted){
-            hub.giveUp();
+            hub.onEnd();
             console.log("сдался");
         }
     });

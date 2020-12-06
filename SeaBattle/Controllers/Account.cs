@@ -56,7 +56,7 @@ namespace SeaBattle.Controllers
                     return Redirect(form?.ReturnUrl ?? "/");
                 }
             }
-            ModelState.AddModelError(null, "Введены неправильные имя или пароль");
+            ModelState?.AddModelError(null, "Введены неправильные имя или пароль");
             return View(form);
         }
         [Authorize]

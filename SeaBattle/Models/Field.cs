@@ -11,7 +11,20 @@ namespace SeaBattle.Models
         public int cellSize { get; set; }
         public int[][] matrix { get; set; }
         public Ship[] ships { get; set; }
-
+        public bool IsDefeated
+        {
+            get
+            {
+                foreach (var item in ships)
+                {
+                    if(item.hits < item.decks)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
         public static Field DeserializeJson(string json) =>
             JsonConvert.DeserializeObject<Field>(json);
         public string SerializeJson() =>

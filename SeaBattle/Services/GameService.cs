@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SeaBattle.Services
 {
@@ -57,15 +58,15 @@ namespace SeaBattle.Services
             // в сессиях организовать игру между игроками
         }
 
-        public async Task GiveUp() // Вызывается, когда игрок сдается
+        public async Task OnEnd() // Вызывается, когда игрок сдается
         {
             await hubContext.Clients.Users(ContextReceiver.Name, ContextSender.Name)
-                .SendCoreAsync("OnSurrender", new object[1]); // вызывается клиентский метод для досрочного завершения игры
+                .SendCoreAsync("OnEnd", new object[1]); // вызывается клиентский метод для завершения игры
 
-            await ContextSession.Message(ContextSender, "Вы сдались, вы можете начать новую игру.", 
+            await ContextSession.Message(ContextSender, "Вы проиграли! Вы можете начать новую игру.",
                 Session.MessageType.Red);
 
-            await ContextSession.Message(ContextReceiver, "Вы победили! Ваш оппонент сдался, вы можете начать новую игру.",
+            await ContextSession.Message(ContextReceiver, "Вы победили! Вы можете начать новую игру.",
                 Session.MessageType.Blue);
 
             Sessions.Remove(ContextSession);
@@ -118,6 +119,8 @@ namespace SeaBattle.Services
             ContextReceiver.Field.Hit(x, y, shipIndex);
             await hubContext.Clients.User(ContextReceiver.Name)
                 .SendCoreAsync("ReceiveOwnField", new object[] { ContextReceiver?.Field.SerializeJson() });
+
+            if (ContextReceiver.Field.IsDefeated) await OnEnd();
         }
 
         public async Task<bool> ReturnGameFieldIfGameStarted()

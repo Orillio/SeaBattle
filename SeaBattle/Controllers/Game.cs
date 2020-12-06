@@ -47,10 +47,10 @@ namespace SeaBattle.Controllers
             return await service.ReturnGameFieldIfGameStarted();
         }
         
-        [Route("/api/giveUp")]
-        public async Task GiveUp()
+        [Route("/api/onEnd")]
+        public async Task OnEnd()
         {
-            await service.GiveUp();
+            await service.OnEnd();
         }
 
         [Route("/api/isMyTurn")]

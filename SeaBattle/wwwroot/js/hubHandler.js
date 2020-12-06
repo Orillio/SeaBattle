@@ -26,9 +26,9 @@ class hubHandler{
             url: "/api/escapeQueue",
         });
     }
-    giveUp(){
+    onEnd(){
         $.get({
-            url: "/api/giveUp",
+            url: "/api/onEnd",
         });
     }
     isGameBegan(){
@@ -104,7 +104,7 @@ class hubHandler{
         this.hubConnection.on('ChangeTurn', function(data){
             myTurn = data;
         });
-        this.hubConnection.on('OnSurrender', function(data){
+        this.hubConnection.on('OnEnd', function(data){
             gameStarted = false;
             action_button.innerText = "Найти противника";
             document.getElementById("dark_rect").style.display = "flex";
